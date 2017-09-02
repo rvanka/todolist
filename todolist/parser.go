@@ -22,13 +22,14 @@ func (p *Parser) ParseNewTodo(input string) *Todo {
 	todo.Subject = p.Subject(input)
 	todo.Projects = p.Projects(input)
 	todo.Contexts = p.Contexts(input)
+	todo.Hours = p.Hours(input)
 	if p.hasDue(input) {
 		todo.Due = p.Due(input, time.Now())
 	}
 	return todo
 }
 
-func (p *Parser) ParseEditTodo(todo *Todo, input string) bool {
+func (p *Parser) ParseEditTodo(todo *Todo, input string, updating bool) bool {
 	r := regexp.MustCompile(`(\w+)\s+(\d+)(\s+(.*))?`)
 	matches := r.FindStringSubmatch(input)
 	if len(matches) < 3 {
@@ -38,10 +39,20 @@ func (p *Parser) ParseEditTodo(todo *Todo, input string) bool {
 
 	subjectOnly := matches[3]
 
-	if p.Subject(subjectOnly) != "" {
+	if updating == false && p.Subject(subjectOnly) != "" {
 		todo.Subject = p.Subject(subjectOnly)
 		todo.Projects = p.Projects(subjectOnly)
 		todo.Contexts = p.Contexts(subjectOnly)
+	}
+	if updating == false {
+        if p.hasHours(subjectOnly) {
+		    todo.Hours = p.Hours(subjectOnly)
+        } else {
+		    todo.Hours = 0
+        }
+	}
+	if updating == true && p.hasHoursSpent(subjectOnly) {
+		todo.HoursSpent = todo.HoursSpent + p.HoursSpent(subjectOnly)
 	}
 	if p.hasDue(subjectOnly) {
 		todo.Due = p.Due(subjectOnly, time.Now())
@@ -50,7 +61,10 @@ func (p *Parser) ParseEditTodo(todo *Todo, input string) bool {
 }
 
 func (p *Parser) Subject(input string) string {
-	if strings.Contains(input, " due") {
+	if strings.Contains(input, " hrs") {
+		index := strings.LastIndex(input, " hrs")
+		return strings.TrimSpace(input[0:index])
+	} else if strings.Contains(input, " due") {
 		index := strings.LastIndex(input, " due")
 		return strings.TrimSpace(input[0:index])
 	} else {
@@ -81,6 +95,59 @@ func (p *Parser) Contexts(input string) []string {
 		fmt.Println("regex error", err)
 	}
 	return p.matchWords(input, r)
+}
+
+func (p *Parser) HoursSpent(input string) int {
+	r, err := regexp.Compile(`%[0-9]+`)
+	if err != nil {
+		fmt.Println("regex error", err)
+        return 0
+	}
+	output := r.FindString(input)
+	fmt.Println(output[1:])
+    res, err2 := strconv.Atoi(output[1:])
+
+    if err2 != nil {
+        fmt.Println("cannot convert to int", err2)
+        return 0
+    }
+
+	return res
+}
+
+func (p *Parser) Hours(input string) int {
+	r, err := regexp.Compile(`hrs[0-9]+`)
+	if err != nil {
+		fmt.Println("regex error", err)
+		return 0 
+	}
+	output := r.FindString(input)
+	if output == "" {
+		return 0 
+	}
+	fmt.Println(output[3:])
+    res, err2 := strconv.Atoi(output[3:])
+
+    if err2 != nil {
+        fmt.Println("cannot convert to int", err2)
+    }
+	return res
+}
+
+func (p *Parser) hasHoursSpent(input string) bool {
+	r, err := regexp.Compile(`\%[0-9]+`)
+	if err != nil {
+		fmt.Println("regex error", err)
+	}
+	return r.MatchString(input)
+}
+
+func (p *Parser) hasHours(input string) bool {
+	r, err := regexp.Compile(`hrs[0-9]+`)
+	if err != nil {
+		fmt.Println("regex error", err)
+	}
+	return r.MatchString(input)
 }
 
 func (p *Parser) hasDue(input string) bool {

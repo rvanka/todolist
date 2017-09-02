@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/gammons/todolist/todolist"
+	"github.com/rvanka/todolist/todolist"
 	"github.com/skratchdot/open-golang/open"
 )
 
@@ -82,6 +82,11 @@ func usage() {
 	yellow.Println("\ttodo l @frank due tom by p")
 	fmt.Println("\tlists all todos due tomorrow concerining @frank for +project, grouped by project\n")
 
+	blueBold.Println("\nUpdating ")
+	fmt.Println("Update the time spent on a todo by its Id and hours spent:\n")
+	yellow.Println("\ttodo u 33 %4")
+	fmt.Println("\tUpdates todo with id 33, with 4 hours")
+
 	blueBold.Println("\nCompleting and uncompleting ")
 	fmt.Println("Complete and Uncomplete a todo by its Id:\n")
 	yellow.Println("\ttodo c 33")
@@ -150,13 +155,15 @@ func routeInput(command string, input string) {
 	case "ac":
 		app.ArchiveCompleted()
 	case "e", "edit":
-		app.EditTodo(input)
+		app.EditTodo(input,false)
 	case "ex", "expand":
 		app.ExpandTodo(input)
 	case "gc":
 		app.GarbageCollect()
 	case "p", "prioritize":
 		app.PrioritizeTodo(input)
+	case "u", "update":
+		app.EditTodo(input, true)
 	case "up", "unprioritize":
 		app.UnprioritizeTodo(input)
 	case "init":

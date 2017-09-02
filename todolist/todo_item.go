@@ -11,6 +11,8 @@ type Todo struct {
 	Projects      []string `json:"projects"`
 	Contexts      []string `json:"contexts"`
 	Due           string   `json:"due"`
+	Hours         int   `json:"hours"`
+	HoursSpent    int   `json:"%"`
 	Completed     bool     `json:"completed"`
 	CompletedDate string   `json:"completedDate"`
 	Archived      bool     `json:"archived"`

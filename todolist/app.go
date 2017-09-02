@@ -91,7 +91,7 @@ func (a *App) UnarchiveTodo(input string) {
 	fmt.Println("Todo unarchived.")
 }
 
-func (a *App) EditTodo(input string) {
+func (a *App) EditTodo(input string, updating bool) {
 	a.Load()
 	id := a.getId(input)
 	if id == -1 {
@@ -104,7 +104,7 @@ func (a *App) EditTodo(input string) {
 	}
 	parser := &Parser{}
 
-	if parser.ParseEditTodo(todo, input) {
+	if parser.ParseEditTodo(todo, input, updating) {
 		a.Save()
 		fmt.Println("Todo updated.")
 	}

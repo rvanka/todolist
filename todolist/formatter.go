@@ -1,6 +1,7 @@
 package todolist
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"regexp"
@@ -48,11 +49,37 @@ func (f *Formatter) printTodo(todo *Todo) {
 	if todo.IsPriority {
 		yellow.Add(color.Bold, color.Italic)
 	}
-	fmt.Fprintf(f.Writer, " %s\t%s\t%s\t%s\t\n",
+	fmt.Fprintf(f.Writer, " %s\t%s\t%s\t%4s\t%4s\t%s\t\n",
 		yellow.SprintFunc()(strconv.Itoa(todo.Id)),
 		f.formatCompleted(todo.Completed),
 		f.formatDue(todo.Due, todo.IsPriority),
+		f.formatHours(todo.Hours),
+		f.formatHoursSpent(todo.Hours, todo.HoursSpent),
 		f.formatSubject(todo.Subject, todo.IsPriority))
+}
+
+func (f *Formatter) formatHours(hours int) string {
+	var buffer bytes.Buffer
+	green := color.New(color.FgGreen)
+
+	buffer.WriteString(green.SprintFunc()(hours))
+	buffer.WriteString(green.SprintFunc()("h"))
+
+	return buffer.String()
+}
+
+func (f *Formatter) formatHoursSpent(hours int, hoursSpent int) string {
+	var buffer bytes.Buffer
+	green := color.New(color.FgGreen)
+
+    if hours == 0 {
+	    buffer.WriteString(green.SprintFunc()(int(0)))
+    } else {
+	    buffer.WriteString(green.SprintFunc()(int(hoursSpent * 100 / hours)))
+    }
+
+	buffer.WriteString(green.SprintFunc()("%"))
+	return buffer.String()
 }
 
 func (f *Formatter) formatDue(due string, isPriority bool) string {
