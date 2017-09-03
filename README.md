@@ -1,32 +1,36 @@
-# Todolist
+# Todolist with time tracking per task
+This is a fork of the Todolist app by Grant Ammons, hosted at todolist.site. 
 
-[![](https://goreportcard.com/badge/github.com/gammons/todolist)](https://goreportcard.com/report/github.com/gammons/todolist)
-[![Build Status](https://travis-ci.org/gammons/todolist.svg?branch=master)](https://travis-ci.org/gammons/todolist)
+This app adds time tracking functionality to version 0.6 of the todolist app. The web app functionality appears
+to be broken by this change. 
 
-Todolist is a simple and very fast task manager for the command line.  It is based on the [Getting Things Done][gtd] methodology.
+## How does it work?
+Add the time allocated to a task when the task is created. Also works with the edit interface.
 
-[gtd]: http://lifehacker.com/productivity-101-a-primer-to-the-getting-things-done-1551880955
+todolist a +p1 finish qualification of project. hrs8 due fri
 
-## Documentation
+todolist l
 
-**See [The main Todolist website][tdl] for the current documentation.**
+ all
+  1 [ ] Fri Sep 8   8h  0%  +p1 finish qualification of project.
 
-[tdl]: http://todolist.site
 
-## The frontend webapp
+Update the time spent using the following command
 
-The frontend is an open source React/Redux based app that is hosted at https://github.com/gammons/todolist_frontend.
+todolist u 1 %4
 
-## Is it good?
+todolist l
 
-Yes.  Yes it is.
+ all
+  1 [ ] Fri Sep 8   8h  50% +p1 finish qualification of project.
 
-## Author
 
-Please send complaints, complements, rants, etc to [Grant Ammons][ga]
+This shows up in the list as the % of the number of hours allocated.
+
+
+Feedback and suggestions appreciated. 
+
 
 ## License
 
 Todolist is open source, and uses the [MIT license](https://github.com/gammons/todolist/blob/master/LICENSE.md).
-
-[ga]: https://twitter.com/gammons

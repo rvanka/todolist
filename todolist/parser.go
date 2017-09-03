@@ -104,7 +104,6 @@ func (p *Parser) HoursSpent(input string) int {
         return 0
 	}
 	output := r.FindString(input)
-	fmt.Println(output[1:])
     res, err2 := strconv.Atoi(output[1:])
 
     if err2 != nil {
@@ -125,7 +124,6 @@ func (p *Parser) Hours(input string) int {
 	if output == "" {
 		return 0 
 	}
-	fmt.Println(output[3:])
     res, err2 := strconv.Atoi(output[3:])
 
     if err2 != nil {
